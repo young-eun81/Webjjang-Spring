@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
@@ -10,13 +12,21 @@
 	<!-- HikariCP의 설정 -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 	<!-- 오라클 서버 정보, 아이디, 비밀번호 -->
-		<!-- property tag : setter()를 이용한 데이터 세팅 -->
+		<!--  property tag : setter()를 이용한 데이터 세팅  -->
+<!--  		<property name="jdbcUrl" 
+		value="jdbc:oracle:thin:@localhost:1521:xe" /> --> 
+<!-- 		<property name="driverClassName"
+				value="oracle.jdbc.driver.OracleDriver" />  -->
+
+	<!-- log4jdbc를 사용하면 로그를 더 직관적으로 볼 수 있다 -->
+ 		<property name="driverClassName" 
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" /> 
+
 		<property name="jdbcUrl"
-		value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="driverClassName" 
-				value="oracle.jdbc.driver.OracleDriver" />
+			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
+
 		<property name="username" value="zerosilver" />
-		<property name="password" value="duddms960" />
+		<property name="password" value="duddms960!" />
 	</bean>
 	
 	<!-- HikariCP 사용 객체 -->
@@ -25,6 +35,14 @@
 		<!-- constructor-arg tag: 생성자를 이용한 데이터 세팅 -->
 		<constructor-arg ref="hikariConfig" />
 	</bean>
+	
+	<!-- ORM : MyBatis에 대한 설정 - DAO 프로그램의 자동화 -->
+	<bean id="sqlSessionFactory" 
+		class = "org.mybatis.spring.SqlSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" /> <!-- 자동 DI -->
+	</bean>
+	
+	<mybatis-spring:scan base-package="org.zerock.mapper"/>
 	
 	<context:component-scan base-package="org.zerock.sample" />	
 		

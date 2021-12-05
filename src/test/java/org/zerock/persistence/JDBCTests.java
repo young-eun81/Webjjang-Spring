@@ -26,7 +26,7 @@ public class JDBCTests {
 	public void testConnection() {
 		// try(try 안에서만 사용할 객체 선언 - try 블록이 끝나면 자동으로 close() 된다.)
 		try(Connection conn = DriverManager.getConnection(
-				"jdbc:oracle:thin:@localhost:1521:xe","zerosilver","duddms960")) 
+				"jdbc:oracle:thin:@localhost:1521:xe","zerosilver","duddms960!")) 
 		{
 			log.info(conn);
 		} catch (Exception e) {
